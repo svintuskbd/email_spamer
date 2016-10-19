@@ -85,10 +85,26 @@ $sendMail = new SendMail;
             <div class="col-lg-6 text-center">
             	<?php
             		// $objPHPExcel = PHPExcel_IOFactory::load("Belgium.xls");
+            		$res = '';
+            		
+            		
+
+					// Открыть заведомо существующий каталог и начать считывать его содержимое
+					// if (is_dir($dir)) {
+					//     if ($dh = opendir($dir)) {
+					//         while (($file = readdir($dh)) !== false) {
+					//             var_dump($file);
+					//         }
+					//         closedir($dh);
+					//     }
+					// }
+
 
             		
-					 
-				  	$xlsData = $sendMail->getXLS('Belgium.xls'); //извлеаем данные из XLS
+
+					$base = $sendMail->rec_listFiles('uploads');
+
+				  	$xlsData = $sendMail->getXLS($base[0]); //извлеаем данные из XLS
 					
 					$resultArr = [];
 					foreach ($xlsData as $key => $value) {
@@ -97,7 +113,7 @@ $sendMail = new SendMail;
 						}
 					}
 
-            		if ($_POST) {
+            		if (isset($_POST['mail'])) {
 						$title1 = $_POST['mail']['title1'];
 						$title2 = $_POST['mail']['title2'];
 						$topText = $_POST['mail']['topText'];
@@ -109,8 +125,23 @@ $sendMail = new SendMail;
 						if ($result) {
 							echo 'Отправлено '.$result;
 						}
-					}					
-					
+					}
+
+					if (isset($_FILES['userfile'])) {
+						$uploaddir = 'uploads/';
+						$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
+						$type = explode('.', basename($_FILES['userfile']['name']));
+
+						if (isset($type[1]) && $type[1] == 'xls') {
+							if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+							    $res = "Файл корректен и был успешно загружен.\n";
+							} else {
+							    $res = "Возможная атака с помощью файловой загрузки!\n";
+							}
+						} else {
+							$res = "Возможная атака с помощью файловой загрузки!\n";
+						}		
+					}
             	?>
            		<form id="formSend" method="POST" action="">
            			<div class="input-group">
@@ -125,6 +156,19 @@ $sendMail = new SendMail;
 						<button class="btn btn-success">Success</button>
 					</div>
            		</form>
+           		<div class="panel panel-default">
+					<div class="panel-heading">Добавить базу рассылки: <?php echo $res; ?></div>
+					<div class="panel-body">
+						<form enctype="multipart/form-data" action="" method="POST">
+						    <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
+						    <!-- <input type="hidden" name="MAX_FILE_SIZE" value="30000" /> -->
+						    <!-- Название элемента input определяет имя в массиве $_FILES -->
+					     	<input name="userfile" type="file" />
+						    <input type="submit" value="Send File" />
+						</form>
+					</div>
+				</div>
+           		
             </div>
             <div class="col-lg-6 text-center">
            		<table border="0" cellpadding="0" border-spacing="0" cellspacing="0" width="800px" height="1080px" style="border-spacing:0; margin: 0 auto; background-color: #161616; color: #fff">
