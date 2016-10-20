@@ -230,9 +230,8 @@ $sendMail = new SendMail;
 		                                    <td></td>
 		                                    <td align="right" style="padding-right: 40px;">
 		                                        <h4 style="font-size: 21px; font-weight: 700; margin-bottom: 0; font-family:'Raleway'; color: #020202">Contacts</h4>
-		                                        <p style="color:#000;">Località Pasina 46 <br>
-		                                            38066 Riva del Garda (TN) <br>
-		                                            IT01764100226</p>
+		                                        <p style="color:#000;">France, Lyon, avenue Rockefeller, 60 <br>
+													Ukraine, Kharkiv 61003, Pavlivska Square, 10</p>
 		                                        </td> 
 		                                    <td></td>     
 		                                </tr>
